@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🎬 Ticket Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080c10;--surface:#0f1419;--card:#141a22;--border:#1e2830;--border2:#263040;--gold:#f5c518;--gold2:#c49a10;--red:#e63946;--green:#2ec27e;--blue:#4a9eff;--purple:#a78bfa;--text:#e8edf5;--muted:#6b7a90;--font-d:'Bebas Neue',sans-serif;--font-b:'Inter',sans-serif;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;padding-bottom:80px}
+header{background:linear-gradient(180deg,#0a0f15 0%,transparent 100%);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:200;backdrop-filter:blur(10px)}
+.hdr{max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-name{font-family:var(--font-d);font-size:20px;letter-spacing:1px;line-height:1}
+.logo-sub{font-size:9px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;margin-top:2px}
+.live-pill{display:flex;align-items:center;gap:5px;background:#0a1f12;border:1px solid #174d2a;border-radius:20px;padding:5px 11px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tabs-wrap{max-width:700px;margin:0 auto;padding:16px 16px 0}
+.tabs{display:flex;gap:3px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px}
+.tab{flex:1;padding:9px 4px;font-size:12px;font-weight:600;border-radius:7px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--font-b);white-space:nowrap}
+.tab.on{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
+main{max-width:700px;margin:0 auto;padding:20px 16px}
+.panel{display:none}.panel.on{display:block}
+.sec{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;margin-top:24px}
+.sec:first-child{margin-top:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px 10px;text-align:center}
+.stat-n{font-family:var(--font-d);font-size:30px;color:var(--gold);line-height:1}
+.stat-l{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.watch-list{display:flex;flex-direction:column;gap:10px}
+.wcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px;transition:border-color .2s}
+.wcard:hover{border-color:var(--border2)}.wcard.paused{opacity:.55}
+.wcard-title{font-family:var(--font-d);font-size:19px;letter-spacing:.5px;line-height:1.1}
+.wcard-loc{font-size:11px;color:var(--muted);margin-top:3px}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.3px}
+.b-amc{background:#0e2035;color:var(--blue);border:1px solid #1a3a5a}
+.b-fan{background:#250e0e;color:#ff8080;border:1px solid #3a1818}
+.b-both{background:#0e2018;color:var(--green);border:1px solid #1a3a28}
+.b-date{background:#18142e;color:var(--purple);border:1px solid #2a2050}
+.b-pause{background:#201a08;color:var(--gold);border:1px solid #3a3010}
+.card-actions{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
+.btn{font-family:var(--font-b);font-size:12px;font-weight:600;padding:7px 13px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;line-height:1}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--gold);color:#000}.btn-primary:hover{background:var(--gold2)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+.btn-red{background:transparent;border:1px solid #2a1010;color:var(--red)}.btn-red:hover{background:#1a0808}
+.btn-yellow{background:transparent;border:1px solid #2a2008;color:var(--gold)}.btn-yellow:hover{background:#1a1808}
+.btn-full{width:100%;justify-content:center;padding:12px}
+.form-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-top:10px;display:none}
+.form-box.on{display:block}
+.fl{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.fi{width:100%;background:#080c10;border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-family:var(--font-b);font-size:13px;color:var(--text);outline:none;transition:border-color .15s;margin-bottom:4px}
+.fi:focus{border-color:var(--gold)}.fi::placeholder{color:var(--muted)}
+.hint{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.src-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.src-btn{font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--font-b)}
+.src-amc{background:#0e2035;border-color:#1a3a5a;color:var(--blue)}
+.src-fan{background:#250e0e;border-color:#3a1818;color:#ff8080}
+.src-both{background:#0e2018;border-color:#1a3a28;color:var(--green)}
+.dates-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.dchip{display:flex;align-items:center;gap:5px;background:#18142e;border:1px solid #2a2050;border-radius:7px;padding:5px 9px;font-size:11px;color:var(--purple)}
+.dchip button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0}
+.dchip button:hover{color:var(--red)}
+.date-row{display:flex;gap:6px;margin-bottom:14px}
+.date-row input{flex:1;background:#080c10;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-family:var(--font-b);font-size:13px;color:var(--text);outline:none}
+.date-row input:focus{border-color:var(--gold)}
+.code-wrap{position:relative}
+.code{background:#060a0e;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:11px;color:#7dd3fc;white-space:pre;overflow-x:auto;line-height:1.6;max-height:380px;overflow-y:auto}
+.cbtn{position:absolute;top:8px;right:8px;background:#141a22;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--muted);cursor:pointer;font-family:var(--font-b);transition:all .15s}
+.cbtn:hover{color:var(--text)}.cbtn.ok{color:var(--green);border-color:#1a3a28}
+.gstep{display:flex;gap:12px;margin-bottom:18px;align-items:flex-start}
+.gnum{width:26px;height:26px;min-width:26px;background:var(--gold);color:#000;border-radius:50%;font-family:var(--font-d);font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.gbody{flex:1}
+.gtitle{font-weight:700;font-size:13px;margin-bottom:4px;color:var(--text)}
+.gdesc{font-size:12px;color:var(--muted);line-height:1.6}
+.gcode{margin-top:6px;background:#060a0e;border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-size:11px;color:#7dd3fc;font-family:monospace;line-height:1.7;word-break:break-all}
+.info-box{background:#0e1420;border:1px solid #1e2c3a;border-radius:var(--r);padding:15px;margin-bottom:14px}
+.info-title{font-weight:700;font-size:13px;margin-bottom:6px}
+.info-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.preview{background:#080c10;border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;line-height:1.8;margin-bottom:10px}
+.div{height:1px;background:var(--border);margin:20px 0}
+.empty{text-align:center;padding:36px 20px;color:var(--muted)}
+.empty-i{font-size:36px;margin-bottom:8px}.empty-t{font-size:13px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#000;font-weight:700;font-size:12px;padding:10px 18px;border-radius:20px;transition:transform .25s;z-index:999;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{transform:translateX(-50%) translateY(0)}
+@media(max-width:380px){.stat-n{font-size:24px}.tab{font-size:11px;padding:8px 2px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-icon">🎬</div>
+      <div><div class="logo-name">Ticket Bot</div><div class="logo-sub">AMC + Fandango</div></div>
+    </div>
+    <div class="live-pill"><div class="dot"></div>WATCHING</div>
+  </div>
+</header>
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab on" onclick="tab('watches')">🎯 Watches</button>
+    <button class="tab" onclick="tab('code')">⚙️ Code</button>
+    <button class="tab" onclick="tab('discord')">💬 Discord</button>
+    <button class="tab" onclick="tab('guide')">📱 Setup</button>
+  </div>
+</div>
+<main>
+
+<!-- WATCHES -->
+<div class="panel on" id="p-watches">
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">Watches</div></div>
+    <div class="stat"><div class="stat-n" id="s-active">0</div><div class="stat-l">Active</div></div>
+    <div class="stat"><div class="stat-n" id="s-dates">0</div><div class="stat-l">Dates</div></div>
+  </div>
+  <div class="sec">Your Watches</div>
+  <div class="watch-list" id="wlist">
+    <div class="empty" id="empty"><div class="empty-i">🎟️</div><div class="empty-t">No watches yet — add your first below</div></div>
+  </div>
+  <div style="margin-top:14px">
+    <button class="btn btn-primary btn-full" onclick="toggleForm()" id="addbtn">＋ Add New Watch</button>
+  </div>
+  <div class="form-box" id="form">
+    <label class="fl">Movie Name</label>
+    <input class="fi" id="f-name" placeholder="e.g. Dune: Part Three"/><div class="hint">Just the movie title</div>
+    <label class="fl">Theater Name</label>
+    <input class="fi" id="f-theater" placeholder="e.g. AMC Lincoln Square 13"/><div class="hint">How you want it to appear in notifications</div>
+    <label class="fl">Check On</label>
+    <div class="src-row">
+      <button class="src-btn src-amc" id="sb-amc" onclick="setSrc('amc')">AMC</button>
+      <button class="src-btn" id="sb-fan" onclick="setSrc('fandango')">Fandango</button>
+      <button class="src-btn" id="sb-both" onclick="setSrc('both')">Both</button>
+    </div>
+    <div id="amc-f">
+      <label class="fl">AMC Theater Page URL</label>
+      <input class="fi" id="f-amc-turl" placeholder="https://www.amctheatres.com/theatres/819-amc-lincoln-square-13"/>
+      <div class="hint">Go to the theater on AMC → copy the URL from your browser. No ID needed — extracted automatically.</div>
+      <label class="fl">AMC Movie Showtimes URL</label>
+      <input class="fi" id="f-amc-murl" placeholder="https://www.amctheatres.com/movies/dune-part-three/showtimes"/>
+      <div class="hint">Find the movie on AMC → click Showtimes → copy that URL here.</div>
+    </div>
+    <div id="fan-f" style="display:none">
+      <label class="fl">Fandango Theater Page URL</label>
+      <input class="fi" id="f-fan-turl" placeholder="https://www.fandango.com/amc-lincoln-square-13_aaefv/theater-page"/>
+      <div class="hint">Go to the theater on Fandango → copy the URL. ID is extracted automatically.</div>
+      <label class="fl">Fandango Movie Page URL</label>
+      <input class="fi" id="f-fan-murl" placeholder="https://www.fandango.com/dune-part-three_12345/movie-overview"/>
+      <div class="hint">Leave blank if not on Fandango yet — you can add it later when the movie appears.</div>
+    </div>
+    <label class="fl">Dates to Watch</label>
+    <div class="dates-chips" id="dchips"></div>
+    <div class="date-row">
+      <input type="date" id="f-date"/>
+      <button class="btn btn-ghost" onclick="addDate()">Add</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveWatch()">Save Watch</button>
+      <button class="btn btn-ghost" onclick="toggleForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CODE -->
+<div class="panel" id="p-code">
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
+    This updates automatically as you add or change watches. Copy it and paste into <b style="color:var(--text)">watches.json</b> on GitHub to apply changes to your bot.
+  </p>
+  <div class="sec">watches.json</div>
+  <div class="code-wrap">
+    <div class="code" id="watches-code">[]</div>
+    <button class="cbtn" id="cbtn1" onclick="copyCode('watches-code','cbtn1')">Copy</button>
+  </div>
+  <div class="div"></div>
+  <div class="sec">How to apply changes on mobile</div>
+  <div class="gstep"><div class="gnum">1</div><div class="gbody"><div class="gtitle">Copy watches.json above</div><div class="gdesc">Tap Copy — your full config is on your clipboard.</div></div></div>
+  <div class="gstep"><div class="gnum">2</div><div class="gbody"><div class="gtitle">Open github.com → your amc-bot repo</div><div class="gdesc">Tap <b style="color:var(--text)">watches.json</b> → pencil ✏️ icon → select all text → paste → <b style="color:var(--text)">Commit changes</b></div></div></div>
+  <div class="gstep"><div class="gnum">3</div><div class="gbody"><div class="gtitle">Done — bot picks it up within 5 minutes</div><div class="gdesc">GitHub Actions reads watches.json on every run automatically. No restart needed.</div></div></div>
+</div>
+
+<!-- DISCORD -->
+<div class="panel" id="p-discord">
+  <div class="info-box">
+    <div class="info-title" style="color:#5865f2">💬 What the Discord Bot Does</div>
+    <div class="info-desc">
+      • <b style="color:var(--text)">When seats open:</b> @everyone ping + seat map + buy link<br/>
+      • <b style="color:var(--text)">Daily at 9AM ET:</b> Quiet status post from AMC Stony Brook 17 showing a random seat map — no ping, just proof the bot is alive<br/>
+      • <b style="color:var(--text)">No seats found:</b> Silence — no spam
+    </div>
+  </div>
+  <div class="sec">Step 1 — Create a Discord Webhook</div>
+  <div class="gstep"><div class="gnum">1</div><div class="gbody"><div class="gtitle">Open your Discord server on your phone</div><div class="gdesc">Go to the channel you want alerts in (e.g. <b style="color:var(--text)">#ticket-alerts</b>)</div></div></div>
+  <div class="gstep"><div class="gnum">2</div><div class="gbody"><div class="gtitle">Open Channel Settings</div><div class="gdesc">Tap and hold the channel name → <b style="color:var(--text)">Edit Channel</b></div></div></div>
+  <div class="gstep"><div class="gnum">3</div><div class="gbody"><div class="gtitle">Create the Webhook</div><div class="gdesc">Go to <b style="color:var(--text)">Integrations → Webhooks → New Webhook</b><br/>Name it "Ticket Bot" → tap <b style="color:var(--text)">Copy Webhook URL</b></div></div></div>
+  <div class="gstep"><div class="gnum">4</div><div class="gbody">
+    <div class="gtitle">Add to GitHub Secrets</div>
+    <div class="gdesc">GitHub repo → Settings → Secrets and variables → Actions → New secret</div>
+    <div class="gcode">Name:  DISCORD_WEBHOOK
+Value: paste the webhook URL here</div>
+  </div></div>
+  <div class="div"></div>
+  <div class="sec">What you'll see</div>
+  <div class="preview">
+    <div style="color:var(--muted);font-size:11px;margin-bottom:8px">DAILY SNAPSHOT (no ping) — 9:00 AM ET every day</div>
+    <div style="color:var(--blue);font-weight:700">📸 Daily Bot Snapshot — Monday, Jun 10, 9:00 AM</div>
+    <div style="color:var(--text);margin-top:4px">Bot is alive and running! ✅<br/>Checking your movies every 5 min. No alert = no seats yet.</div>
+    <div style="margin-top:8px;font-family:monospace;font-size:11px;color:#7dd3fc">▬▬▬▬▬▬  SCREEN  ▬▬▬▬▬▬<br/>A  🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥<br/>B  🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥<br/>C  🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥<br/>🟩 Available (0)  🟥 Taken</div>
+  </div>
+  <div class="preview" style="border-color:#1a3a28">
+    <div style="color:var(--red);font-weight:700;font-size:13px">@everyone 🚨 SEATS AVAILABLE — BUY NOW 🚨</div>
+    <div style="color:var(--green);font-weight:700;margin-top:6px">🎟️ Dune: Part Three — SEATS OPEN!</div>
+    <div style="font-family:monospace;font-size:11px;color:#7dd3fc;margin-top:6px">▬▬▬▬▬▬  SCREEN  ▬▬▬▬▬▬<br/>D  🟥🟥🟩🟩🟥🟥🟥🟩🟥🟥<br/>E  🟥🟩🟩🟥🟥🟥🟥🟥🟥🟥<br/>🟩 Available (4)  🟥 Taken</div>
+    <div style="margin-top:8px;color:var(--text)">💺 Row D Seat 3, Row D Seat 4, Row D Seat 8, Row E Seat 2</div>
+    <div style="color:var(--gold);margin-top:6px">→ Buy on AMC (tap to open instantly)</div>
+  </div>
+</div>
+
+<!-- GUIDE -->
+<div class="panel" id="p-guide">
+  <div class="sec">GitHub Mobile Setup — Full Walkthrough</div>
+  <div class="gstep"><div class="gnum">1</div><div class="gbody"><div class="gtitle">Go to github.com in your phone browser & log in</div><div class="gdesc">Tap <b style="color:var(--text)">+</b> (top right) → <b style="color:var(--text)">New repository</b></div></div></div>
+  <div class="gstep"><div class="gnum">2</div><div class="gbody"><div class="gtitle">Create the repo</div><div class="gdesc">Name: <b style="color:var(--text)">amc-bot</b> &nbsp;·&nbsp; Set to <b style="color:var(--text)">Public</b> (needed for free GitHub Pages) &nbsp;·&nbsp; Tap <b style="color:var(--text)">Create repository</b></div></div></div>
+  <div class="gstep"><div class="gnum">3</div><div class="gbody"><div class="gtitle">Upload checker.js</div><div class="gdesc">Add file → Create new file → name it <b style="color:var(--text)">checker.js</b> → paste contents → Commit new file</div></div></div>
+  <div class="gstep"><div class="gnum">4</div><div class="gbody"><div class="gtitle">Upload watches.json</div><div class="gdesc">Add file → Create new file → name it <b style="color:var(--text)">watches.json</b> → go to the Code tab here, tap Copy, paste → Commit new file</div></div></div>
+  <div class="gstep"><div class="gnum">5</div><div class="gbody">
+    <div class="gtitle">Create the workflow file</div>
+    <div class="gdesc">Add file → Create new file → type exactly in the filename box (including slashes):</div>
+    <div class="gcode">.github/workflows/check-tickets.yml</div>
+    <div class="gdesc" style="margin-top:6px">Paste the check-tickets.yml contents → Commit new file</div>
+  </div></div>
+  <div class="gstep"><div class="gnum">6</div><div class="gbody"><div class="gtitle">Upload index.html (this app)</div><div class="gdesc">Add file → Upload files → upload the index.html → Commit<br/>This becomes your manager app hosted on GitHub Pages.</div></div></div>
+  <div class="gstep"><div class="gnum">7</div><div class="gbody">
+    <div class="gtitle">Enable GitHub Pages</div>
+    <div class="gdesc">In your repo: Settings → Pages → Source: <b style="color:var(--text)">Deploy from branch</b> → Branch: <b style="color:var(--text)">main</b> → Save<br/><br/>Your app will go live at:</div>
+    <div class="gcode">mustaqim25hasan-source.github.io/amc-bot</div>
+    <div class="gdesc" style="margin-top:6px">Bookmark this on your phone AND PC — same site, always in sync!</div>
+  </div></div>
+  <div class="gstep"><div class="gnum">8</div><div class="gbody">
+    <div class="gtitle">Add all 3 secrets</div>
+    <div class="gdesc">Settings → Secrets and variables → Actions → New repository secret (add all 3):</div>
+    <div class="gcode">PUSHOVER_USER_KEY    → your Pushover user key
+PUSHOVER_API_TOKEN   → your Pushover API token
+DISCORD_WEBHOOK      → your Discord webhook URL</div>
+  </div></div>
+  <div class="gstep"><div class="gnum">9</div><div class="gbody"><div class="gtitle">Enable Actions & run the test</div><div class="gdesc">Actions tab → click <b style="color:var(--text)">AMC Ticket Checker</b> → <b style="color:var(--text)">Run workflow → Run workflow</b><br/>Within 30 seconds you'll get a Pushover notification AND a Discord message confirming everything works!</div></div></div>
+  <div class="div"></div>
+  <div class="sec">Bookmark as an app on Android</div>
+  <div class="gdesc" style="font-size:12px;color:var(--muted);line-height:1.7">
+    Open your GitHub Pages URL in Chrome → tap the <b style="color:var(--text)">⋮ menu → Add to Home Screen</b><br/>
+    You get an app icon that opens this manager directly. Works on PC in any browser too.
+  </div>
+  <div class="div"></div>
+  <div class="sec">To update your watches later</div>
+  <div class="gdesc" style="font-size:12px;color:var(--muted);line-height:1.7">
+    Open this app on your phone or PC → Watches tab → add/edit/remove → Code tab → Copy → paste into watches.json on GitHub. Done in under 2 minutes.
+  </div>
+</div>
+
+</main>
+<div class="toast" id="toast"></div>
+<script>
+let W=JSON.parse(localStorage.getItem('tbv2')||'null');
+if(!W){W=[{id:'w1',name:'Dune: Part Three',theater:'AMC Lincoln Square 13',source:'both',active:true,amcTheaterUrl:'https://www.amctheatres.com/theatres/819-amc-lincoln-square-13',amcMovieUrl:'https://www.amctheatres.com/movies/dune-part-three/showtimes',fanTheaterUrl:'https://www.fandango.com/amc-lincoln-square-13_aaefv/theater-page',fanMovieUrl:'',dates:['2025-12-18','2025-12-19','2025-12-20']}];persist();}
+let editing=null,dates=[],src='amc',formOpen=false;
+function persist(){localStorage.setItem('tbv2',JSON.stringify(W));renderAll();}
+function tab(id){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',['watches','code','discord','guide'][i]===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  if(id==='code')genCode();
+}
+function renderAll(){
+  const list=document.getElementById('wlist'),empty=document.getElementById('empty');
+  document.getElementById('s-total').textContent=W.length;
+  document.getElementById('s-active').textContent=W.filter(w=>w.active).length;
+  document.getElementById('s-dates').textContent=W.reduce((s,w)=>s+w.dates.length,0);
+  list.querySelectorAll('.wcard').forEach(c=>c.remove());
+  if(!W.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  W.forEach(w=>{
+    const d=document.createElement('div');
+    d.className='wcard'+(w.active?'':' paused');
+    d.innerHTML=`<div class="wcard-title">${w.name}</div><div class="wcard-loc">📍 ${w.theater}</div>
+<div class="badges">
+${w.source==='amc'?'<span class="badge b-amc">AMC</span>':''}
+${w.source==='fandango'?'<span class="badge b-fan">Fandango</span>':''}
+${w.source==='both'?'<span class="badge b-both">AMC + Fandango</span>':''}
+${!w.active?'<span class="badge b-pause">⏸ Paused</span>':''}
+${w.dates.map(d=>`<span class="badge b-date">${fmtD(d)}</span>`).join('')}
+</div>
+<div class="card-actions">
+<button class="btn btn-ghost" onclick="editW('${w.id}')">✏️ Edit</button>
+<button class="btn btn-yellow" onclick="toggleA('${w.id}')">${w.active?'⏸ Pause':'▶️ Resume'}</button>
+<button class="btn btn-red" onclick="delW('${w.id}')">🗑 Delete</button>
+</div>`;
+    list.appendChild(d);
+  });
+}
+function fmtD(d){const[y,m,day]=d.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+parseInt(day);}
+function toggleForm(){
+  formOpen=!formOpen;editing=null;
+  if(formOpen){dates=[];clearForm();}
+  document.getElementById('form').classList.toggle('on',formOpen);
+  document.getElementById('addbtn').textContent=formOpen?'✕ Cancel':'＋ Add New Watch';
+}
+function clearForm(){
+  ['f-name','f-theater','f-amc-turl','f-amc-murl','f-fan-turl','f-fan-murl'].forEach(id=>document.getElementById(id).value='');
+  setSrc('amc');renderChips();
+}
+function setSrc(s){
+  src=s;
+  document.getElementById('sb-amc').className='src-btn'+(s==='amc'?' src-amc':'');
+  document.getElementById('sb-fan').className='src-btn'+(s==='fandango'?' src-fan':'');
+  document.getElementById('sb-both').className='src-btn'+(s==='both'?' src-both':'');
+  document.getElementById('amc-f').style.display=(s==='amc'||s==='both')?'block':'none';
+  document.getElementById('fan-f').style.display=(s==='fandango'||s==='both')?'block':'none';
+}
+function addDate(){const v=document.getElementById('f-date').value;if(!v||dates.includes(v))return;dates.push(v);dates.sort();document.getElementById('f-date').value='';renderChips();}
+function removeDate(d){dates=dates.filter(x=>x!==d);renderChips();}
+function renderChips(){document.getElementById('dchips').innerHTML=dates.map(d=>`<div class="dchip">${fmtD(d)}<button onclick="removeDate('${d}')">×</button></div>`).join('');}
+function saveWatch(){
+  const name=document.getElementById('f-name').value.trim();
+  const theater=document.getElementById('f-theater').value.trim();
+  if(!name||!theater){toast('Enter movie name and theater');return;}
+  if(!dates.length){toast('Add at least one date');return;}
+  const w={id:editing||'w'+Date.now(),name,theater,source:src,
+    amcTheaterUrl:document.getElementById('f-amc-turl').value.trim(),
+    amcMovieUrl:document.getElementById('f-amc-murl').value.trim(),
+    fanTheaterUrl:document.getElementById('f-fan-turl').value.trim(),
+    fanMovieUrl:document.getElementById('f-fan-murl').value.trim(),
+    dates:[...dates],active:true};
+  if(editing){const i=W.findIndex(x=>x.id===editing);if(i!==-1)W[i]=w;}else W.push(w);
+  persist();toggleForm();toast('Saved! Go to Code tab → copy → paste into watches.json on GitHub.');
+}
+function editW(id){
+  const w=W.find(x=>x.id===id);if(!w)return;
+  editing=id;dates=[...w.dates];formOpen=true;
+  document.getElementById('form').classList.add('on');
+  document.getElementById('addbtn').textContent='✕ Cancel';
+  document.getElementById('f-name').value=w.name;
+  document.getElementById('f-theater').value=w.theater;
+  document.getElementById('f-amc-turl').value=w.amcTheaterUrl||'';
+  document.getElementById('f-amc-murl').value=w.amcMovieUrl||'';
+  document.getElementById('f-fan-turl').value=w.fanTheaterUrl||'';
+  document.getElementById('f-fan-murl').value=w.fanMovieUrl||'';
+  setSrc(w.source);renderChips();
+  document.getElementById('form').scrollIntoView({behavior:'smooth'});
+}
+function delW(id){if(!confirm('Delete this watch?'))return;W=W.filter(w=>w.id!==id);persist();toast('Deleted.');}
+function toggleA(id){const w=W.find(x=>x.id===id);if(w){w.active=!w.active;persist();}}
+function genCode(){document.getElementById('watches-code').textContent=JSON.stringify(W.filter(w=>w.active),null,2);}
+function copyCode(elId,btnId){
+  navigator.clipboard.writeText(document.getElementById(elId).textContent).then(()=>{
+    const b=document.getElementById(btnId);b.textContent='Copied!';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok');},2500);
+  });
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3500);}
+renderAll();
+</script>
+</body>
+</html>
