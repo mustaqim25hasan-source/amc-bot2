@@ -9,6 +9,24 @@
     "amcMovieUrl": "https://www.amctheatres.com/movies/dune-part-three/showtimes",
     "fanTheaterUrl": "https://www.fandango.com/amc-lincoln-square-13_aaefv/theater-page",
     "fanMovieUrl": "",
-    "dates": ["2025-12-18", "2025-12-19", "2025-12-20"]
+    "dates": [
+      "2025-12-18",
+      "2025-12-19",
+      "2025-12-20"
+    ]
+  },
+  {
+    "id": "w1781125105902",
+    "name": "Spider-Man: Brand New Day",
+    "theater": "Amc Stony Brook 17",
+    "source": "both",
+    "amcTheaterUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-stony-brook-17/showtimes",
+    "amcMovieUrl": "https://www.amctheatres.com/movies/spider-man-brand-new-day-78598",
+    "fanTheaterUrl": "https://www.fandango.com/amc-loews-stony-brook-17-aalat/theater-page?format=all",
+    "fanMovieUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-stony-brook-17/showtimes",
+    "dates": [
+      "2026-07-30"
+    ],
+    "active": true
   }
 ]
