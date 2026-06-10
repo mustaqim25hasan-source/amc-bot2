@@ -1,0 +1,14 @@
+[
+  {
+    "id": "w1",
+    "name": "Dune: Part Three",
+    "theater": "AMC Lincoln Square 13",
+    "source": "both",
+    "active": true,
+    "amcTheaterUrl": "https://www.amctheatres.com/theatres/819-amc-lincoln-square-13",
+    "amcMovieUrl": "https://www.amctheatres.com/movies/dune-part-three/showtimes",
+    "fanTheaterUrl": "https://www.fandango.com/amc-lincoln-square-13_aaefv/theater-page",
+    "fanMovieUrl": "",
+    "dates": ["2025-12-18", "2025-12-19", "2025-12-20"]
+  }
+]
